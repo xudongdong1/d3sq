@@ -1,0 +1,192 @@
+<link rel="stylesheet" href="https://ca.deppon.com/cubc/css/sui.min.css">
+<link rel="stylesheet" href="https://ca.deppon.com/cubc/css/main.css"/>
+<link rel="stylesheet" href="/cubc/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://ca.deppon.com/cubc/libs/bootstrap-table/css/bootstrap-table.css">
+<link rel="stylesheet" href="https://ca.deppon.com/cubc/libs/query-combobox/css/jquery.ajax-combobox.common.css">
+<link rel="stylesheet" href="https://ca.deppon.com/cubc/libs/query-combobox/css/jquery.ajax-combobox.css">
+<link rel="stylesheet" href="https://ca.deppon.com/cubc/libs/bootstrap-table/css/jquery.mloading.css">
+<div class="bs-docs-section" id="tabpanel_query">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding: 40px 15px 25px 15px;">
+            <ul id="myTab" class="nav nav-tabs">
+                <li class="active"><a href="/#keCreate" data-toggle="tab" onclick="orderCreateInit('1')">按客户制作</a></li>
+                <li><a href="/#orderCreate" data-toggle="tab" onclick="orderCreateInit('1')">按单号制作</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="keCreate">
+                    <form class="form-horizontal" id="form" action="#" method="post">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" style="width:10%;">账单日期 </label>
+                                <div class="col-sm-2 input-daterange form_datetime" data-toggle="datepicker">
+                                    <input id="billStart" name="billStart" type="text" class="form-control input-date"
+                                           placeholder="开始日期" >
+                                    <span class="add-on"><i class="icon-calendar"></i></span>
+                                </div>
+                                <label class="col-sm-2 control-label">至</label>
+                                <div class="col-sm-2 input-daterange form_datetime" data-toggle="datepicker">
+                                    <input id="billEnd" name="billEnd" type="text" class="form-control input-date"
+                                           placeholder="结束日期">
+                                    <span class="add-on"><i class="icon-calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <!--客户信息的下拉选择框-->
+                                <label class="col-sm-1 control-label" for="customerNameID"
+                                       style="width:10%;">客户名称</label>
+                                <div class="col-sm-2">
+                                    <input id="customerNameID" class="form-control" type="text" name="userCode_k"
+                                           onchange="clearBusiType()">
+                                </div>
+                                <!--部门信息的下拉选择框-->
+                                <label class="col-sm-2 control-label">部门名称</label>
+                                <div class="col-sm-2" id="deptNameDiv">
+                                    <input id="deptNameID" class="form-control" type="text" name="deptCode_k">
+                                </div>
+                                <div class="col-sm-2" id="deptNameDiv2">
+                                    <input id="deptNameID2" class="form-control" type="text" name="deptNameID2">
+                                </div>
+                                <input id="userDeptCode" class="form-control" type="hidden" name="userDeptCode">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" style="width:10%;">来源流水类型</label>
+                                <div class="col-sm-1">
+                                    <label class="checkbox-inline checked">
+                                        <input type="checkbox" name="sourceTradeType" value="YS"
+                                               checked="checked"/><span>应收流水</span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="sourceTradeType" value="YF"
+                                               checked="checked"/><span>应付流水</span>
+                                    </label>
+                                </div>
+                                <label class="col-sm-2 control-label">业务类型</label>
+                                <div class="col-sm-4">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="businessType" value="LTL" onclick="checkBox(this)"><span>零担</span>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="businessType" value="PKG" onclick="checkBox(this)"><span>快递</span>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="businessType" value="FTL" onclick="checkBox(this)"><span>整车</span>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" id="WAH" name="businessType" value="WAH" onclick="checkBox(this)"><span>仓储</span>
+                                    </label>
+                                </div>
+                                <div id="productTypeDiv" style="visibility:hidden;">
+                                    <label class="col-sm-1 control-label">产品类型</label>
+                                    <div class="col-sm-1">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="productType" value="storage"/><span>仓</span>
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="productType" value="dispatch"/><span>配</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-buttons1">
+                                <!--<input type="hidden" name="tableFlag" value="1">-->
+                                <div class="col=sm-12">
+                                    <button type="button" class="btn btn-primary" onclick="orderCreateInit('0')">重置
+                                    </button>
+                                    <button type="button" class="btn btn-warning" onclick="queryAddCustomerBill()"
+                                            data-auth-uri="bill/add/billAdd" disabled="true">查询
+                                    </button>
+                                </div>
+                                <div id="alertId" style="display:none">
+                                    <label class="col-sm-3 control-label" style="margin-left:650px;margin-top:-25px;">
+                                        <font color="red">应还金额小于0,制作对账单请慎重!</font>
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="hidden" id="tableFlagCustomer" name="tableFlag">
+                            <input type="hidden" id="deleteObjCustomer" name="deleteObj">
+                            <input type="hidden" id="bankAccountCus" name="bankAccount">
+                            <input type="hidden" id="bankAccountNameCus" name="bankAccountName">
+                            <input type="hidden" id="bankNameCus" name="bankName">
+                            <input type="hidden" id="billEndTime" name="billEndTime">
+                            <input type="hidden" id="userCodeHidden" name="userCodeHidden">
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="orderCreate">
+                    <form class="form-horizontal" id="form1" action="#" method="post">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" style="width:6.2%;">单号</label>
+                                <div class="col-sm-10" style="width:93.8%;">
+                                <textarea id="sourceBillNo" name="sourceBillNo" rows="4"
+                                          placeholder="最多输入100个单号，单号之间以半角的逗号隔开" data-rules="required"
+                                          class="form-control" style="resize: none;" onblur="trims(this);"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" style="width:10%;">来源流水类型</label>
+                                <div class="col-sm-5">
+                                    <label class="checkbox-inline checked">
+                                        <input type="checkbox" name="_sourceTradeType" value="YS"
+                                               checked="checked"><span>应收流水</span>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="_sourceTradeType" value="YF"
+                                               checked="checked"><span>应付流水</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1" style="width: 6.2%;"></div>
+                                <div class="col-sm-11 required" style="width: 90%;">备注：运单号、小票号、应收流水号、应付流水号</div>
+                            </div>
+                            <div class="form-buttons1">
+                                <div class="col=sm-12">
+                                    <button type="button" class="btn btn-primary" onclick="orderCreateInit('1')">重置
+                                    </button>
+                                    <button type="button" class="btn btn-warning" onclick="queryAddOrderNoBill()"
+                                            data-auth-uri="bill/add/billAdd" disabled="true">查询
+                                    </button>
+                                </div>
+                                <div id="alertId2" style="display:none">
+                                    <label class="col-sm-3 control-label" style="margin-left:600px;margin-top:-25px;">
+                                        <font color="red">应还金额小于0,制作对账单请慎重!</font>
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="hidden" id="customerCode" name="customerCode">
+                            <input type="hidden" id="actionOrgCode" name="actionOrgCode">
+                            <input type="hidden" id="tableFlagOrder" name="tableFlag">
+                            <input type="hidden" id="deleteObjOrder" name="deleteObj">
+                            <input type="hidden" id="bankAccountOrder" name="bankAccount">
+                            <input type="hidden" id="bankAccountNameOrder" name="bankAccountName">
+                            <input type="hidden" id="bankNameOrder" name="bankName">
+                        </fieldset>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="seachType" value="0"/>
+    <div id="addDetail"></div>
+</div>
+<script type="text/javascript" src="https://ca.deppon.com/cubc/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="/cubc/js/common/uapSupport.js"></script>
+<script type="text/javascript" src="https://ca.deppon.com/cubc/js/sui.min.js"></script>
+<script type="text/javascript" src="https://ca.deppon.com/cubc/libs/bootstrap-table/js/bootstrap-table.js"></script>
+<script type="text/javascript" src="https://ca.deppon.com/cubc/libs/query-combobox/js/jquery.ajax-combobox.js"></script>
+<script type="text/javascript" src="/cubc/js/common/common.js"></script>
+<script type="text/javascript" src="https://ca.deppon.com/cubc/libs/bootstrap-table/js/ga.js"></script>
+<script type="text/javascript" src="/cubc/js/account/jquery.mloading.js"></script>
+<script type="text/javascript" src="https://ca.deppon.com/cubc/libs/bootstrap-table/js/html5shiv.min.js"></script>
+<script type="text/javascript" src="https://ca.deppon.com/cubc/libs/bootstrap-table/js/respond.min.js"></script>
+<script type="text/javascript" src="https://ca.deppon.com/cubc/libs/bootstrap-table/js/json2.min.js"></script>
+<script type="text/javascript" src="/cubc/libs/arttemplate/template.js"></script>
+<script type="text/javascript" src="/cubc/js/bill/statement/bill_column.js?v={version}"></script>
+<script type="text/javascript" src="/cubc/js/bill/statement/bill_add.js?v={version}"></script>
+<script type="text/javascript" src="/cubc/js/bill/statement/bill_tip.js"></script>
+<script type="text/javascript" src="/cubc/js/authorization/auth.js"></script><!-- 权限控制 -->
+<script type="text/javascript" src="/cubc/js/utils/numberutil.js"></script>
